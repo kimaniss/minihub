@@ -1,0 +1,668 @@
+
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#173b70">
+<title>MiniHub — 10 Sistem Ringkas</title>
+<style>
+:root {
+  --primary:#2457a7;
+  --primary-dark:#173b70;
+  --bg:#f4f7fb;
+  --card:#fff;
+  --text:#202b3c;
+  --muted:#718096;
+  --border:#e3e9f1;
+  --green:#16865b;
+  --red:#d64545;
+  --orange:#c47a14;
+  --radius:15px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;font-size:14px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid #6ea5ff;outline-offset:2px}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;background:var(--primary-dark);color:#fff;
+  padding:24px 15px;flex-shrink:0}
+.brand{font-size:23px;font-weight:800;padding:0 10px 5px}
+.brand span{color:#8fc3ff}
+.brand-sub{font-size:12px;color:#bdcce1;padding:0 10px 25px}
+.nav-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;
+  color:#aabedb;padding:10px}
+.nav-btn{display:flex;align-items:center;gap:12px;width:100%;padding:12px 11px;
+  border:0;border-radius:9px;color:#dbe6f5;background:transparent;
+  text-align:left;margin:3px 0}
+.nav-btn:hover,.nav-btn.active{background:#ffffff1c;color:#fff}
+.nav-btn.active{box-shadow:inset 3px 0 #86baff}
+.nav-icon{width:25px;font-size:19px;text-align:center}
+.main{flex:1;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;
+  padding:20px 30px;background:#fff;border-bottom:1px solid var(--border)}
+.topbar h1{font-size:21px;margin:0 0 5px}
+.topbar p{margin:0;color:var(--muted);font-size:12px}
+.top-right{display:flex;align-items:center;gap:10px}
+.clock{font-size:12px;color:var(--muted);text-align:right}
+.content{padding:28px 30px;max-width:1300px;margin:auto}
+.welcome{background:linear-gradient(120deg,#173b70,#3478c9);color:#fff;
+  padding:25px;border-radius:var(--radius);margin-bottom:23px}
+.welcome h2{font-size:23px;margin:0 0 9px}
+.welcome p{color:#e0eaff;margin:0;line-height:1.6}
+.section-heading{font-size:17px;margin:25px 0 15px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.stat{padding:19px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);min-width:0}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:12px}
+.stat-value{font-size:25px;font-weight:800;overflow-wrap:anywhere}
+.stat-icon{float:right;font-size:22px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.system-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:19px;cursor:pointer;transition:transform .15s,border-color .15s}
+.system-card:hover{transform:translateY(-2px);border-color:#8bb4ec}
+.system-card .emoji{font-size:27px;margin-bottom:12px}
+.system-card h3{font-size:15px;margin:0 0 8px}
+.system-card p{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 15px}
+.open-label{font-size:12px;color:var(--primary);font-weight:bold}
+.panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px;margin-bottom:18px}
+.panel h2{font-size:17px;margin:0 0 18px}
+.panel h3{font-size:14px;margin:18px 0 10px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+label{font-size:12px;font-weight:700;color:#4b5870}
+input,select,textarea{width:100%;min-width:0;padding:11px 12px;
+  border:1px solid #d8e0eb;border-radius:8px;background:#fff;color:var(--text)}
+textarea{resize:vertical;min-height:90px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.btn{border:0;border-radius:8px;padding:10px 15px;font-weight:700;
+  font-size:12px;background:var(--primary);color:#fff}
+.btn:hover{filter:brightness(.94)}
+.btn.secondary{background:#edf2f8;color:#34445b}
+.btn.danger{background:#fff0f0;color:var(--red)}
+.btn.success{background:#e3f7ec;color:var(--green)}
+.btn.small{padding:7px 9px}
+.list{display:flex;flex-direction:column;gap:9px}
+.item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  border:1px solid var(--border);border-radius:10px;padding:13px}
+.item-main{min-width:0;flex:1;overflow-wrap:anywhere}
+.item-title{font-weight:700;margin-bottom:6px}
+.item-meta{font-size:12px;color:var(--muted);line-height:1.7}
+.item-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.badge{display:inline-block;padding:4px 8px;border-radius:20px;
+  font-size:11px;font-weight:700;background:#edf2f8;color:#52637b}
+.badge.green{background:#e3f7ec;color:#16865b}
+.badge.red{background:#fff0f0;color:#d64545}
+.badge.orange{background:#fff3df;color:#a76a12}
+.empty{text-align:center;padding:30px 15px;color:var(--muted);
+  border:1px dashed var(--border);border-radius:10px}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:700;background:#f8fafc}
+td{overflow-wrap:anywhere}
+.result{background:#f0f6ff;border-radius:10px;padding:17px;margin-top:15px}
+.result strong{font-size:25px;color:var(--primary)}
+.progress{height:8px;background:#e8edf4;border-radius:8px;overflow:hidden;margin:9px 0}
+.progress div{height:100%;background:var(--green);width:0;transition:width .2s}
+.search{margin-bottom:14px}
+.footer{text-align:center;padding:25px;color:var(--muted);font-size:11px}
+.menu-mobile{display:none}
+.notice{padding:12px;border-radius:8px;background:#fff6df;color:#795719;
+  font-size:12px;line-height:1.6;margin-bottom:15px}
+.muted{color:var(--muted)}
+@media(max-width:1000px){
+  .sidebar{width:210px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .content{padding:22px}
+}
+@media(max-width:650px){
+  .app{display:block;padding-bottom:65px}
+  .sidebar{display:none}
+  .topbar{padding:16px;position:sticky;top:0;z-index:5}
+  .topbar h1{font-size:18px}
+  .clock{display:none}
+  .content{padding:15px}
+  .welcome{padding:20px}
+  .welcome h2{font-size:20px}
+  .stats{gap:9px}
+  .stat{padding:14px}
+  .stat-value{font-size:21px}
+  .grid{grid-template-columns:1fr 1fr;gap:9px}
+  .system-card{padding:13px}
+  .system-card .emoji{font-size:23px}
+  .system-card h3{font-size:13px}
+  .system-card p{font-size:11px}
+  .panel{padding:15px}
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .item{flex-direction:column}
+  .item-actions{justify-content:flex-start}
+  .menu-mobile{display:flex;position:fixed;bottom:0;left:0;right:0;
+    z-index:10;background:#fff;border-top:1px solid var(--border);
+    overflow-x:auto;padding:5px;gap:3px}
+  .menu-mobile button{flex:1;min-width:60px;background:transparent;border:0;
+    padding:8px 3px;color:#53647b;font-size:10px}
+  .menu-mobile button span{display:block;font-size:19px;margin-bottom:3px}
+  .menu-mobile button.active{color:var(--primary);font-weight:bold}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Mini<span>Hub</span> ⚡</div>
+    <div class="brand-sub">10 sistem dalam satu tempat</div>
+    <div class="nav-title">Menu utama</div>
+    <div id="sideNav"></div>
+    <div class="nav-title" style="margin-top:22px">Maklumat</div>
+    <button class="nav-btn" data-page="about"><span class="nav-icon">ℹ️</span>Tentang aplikasi</button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Pusat kawalan sistem mini anda</p>
+      </div>
+      <div class="top-right">
+        <div class="clock" id="clock"></div>
+        <button class="btn secondary" id="homeBtn">⌂ Utama</button>
+      </div>
+    </header>
+    <div class="content" id="appContent"></div>
+    <div class="footer">MiniHub © <span id="year"></span> · HTML, CSS & JavaScript Vanilla</div>
+  </main>
+</div>
+<nav class="menu-mobile" id="mobileNav"></nav>
+
+<script>
+"use strict";
+
+/* =====================================
+   MINIHUB - 10 SISTEM RESPONSIF
+   Data disimpan dalam localStorage.
+===================================== */
+
+const systems = [
+ {id:"tasks",icon:"✅",name:"Pengurusan Tugasan",desc:"Senarai kerja dan keutamaan."},
+ {id:"notes",icon:"📝",name:"Buku Nota Digital",desc:"Catat idea dan maklumat penting."},
+ {id:"finance",icon:"💰",name:"Rekod Kewangan",desc:"Pantau pendapatan dan perbelanjaan."},
+ {id:"stock",icon:"📦",name:"Pengurusan Stok",desc:"Urus barang dan baki inventori."},
+ {id:"attendance",icon:"👥",name:"Rekod Kehadiran",desc:"Catat kehadiran harian."},
+ {id:"bmi",icon:"⚖️",name:"Kalkulator BMI",desc:"Kira indeks jisim badan."},
+ {id:"converter",icon:"🔄",name:"Penukar Unit",desc:"Tukar unit ukuran dengan pantas."},
+ {id:"contacts",icon:"📇",name:"Direktori Kenalan",desc:"Simpan dan cari maklumat kenalan."},
+ {id:"habits",icon:"🎯",name:"Penjejak Tabiat",desc:"Pantau rutin dan kemajuan harian."},
+ {id:"events",icon:"📅",name:"Kiraan Detik Acara",desc:"Kira hari menuju acara penting."}
+];
+
+const descriptions = {
+ tasks:"Urus tugasan harian",
+ notes:"Simpan nota peribadi",
+ finance:"Rekod aliran wang",
+ stock:"Urus inventori barang",
+ attendance:"Rekod status kehadiran",
+ bmi:"Pengiraan indeks jisim badan",
+ converter:"Penukaran unit ukuran",
+ contacts:"Buku alamat digital",
+ habits:"Pemantauan rutin harian",
+ events:"Tarikh penting dan acara"
+};
+
+const $ = s => document.querySelector(s);
+const content = $("#appContent");
+let currentPage = "home";
+let editing = {type:null,id:null};
+
+function load(key, fallback=[]) {
+  try {
+    const value=JSON.parse(localStorage.getItem("minihub_"+key));
+    return value===null ? fallback : value;
+  } catch(e) { return fallback; }
+}
+function save(key,value) {
+  try {
+    localStorage.setItem("minihub_"+key,JSON.stringify(value));
+    return true;
+  } catch(e) {
+    alert("Data tidak dapat disimpan. Semak ruang storan browser.");
+    return false;
+  }
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function money(n){
+  return new Intl.NumberFormat("ms-MY",{style:"currency",currency:"MYR"}).format(Number(n)||0);
+}
+function today(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function fmtDate(s){
+  if(!s)return "-";
+  const d=new Date(s+"T00:00:00");
+  return isNaN(d) ? s : d.toLocaleDateString("ms-MY",{day:"numeric",month:"short",year:"numeric"});
+}
+function field(label,name,type="text",value="",extra=""){
+  return `<div class="field"><label for="${name}">${label}</label>
+    <input id="${name}" name="${name}" type="${type}" value="${esc(value)}" ${extra}></div>`;
+}
+function selectField(label,name,options,value=""){
+  return `<div class="field"><label for="${name}">${label}</label><select id="${name}" name="${name}">
+    ${options.map(o=>`<option value="${esc(o[0])}" ${o[0]===value?"selected":""}>${esc(o[1])}</option>`).join("")}
+    </select></div>`;
+}
+function formPanel(title,fields,button="Simpan rekod"){
+  return `<section class="panel"><h2>${title}</h2>
+    <form id="recordForm"><div class="form-grid">${fields}</div>
+    <div class="actions"><button class="btn" type="submit">${button}</button>
+    <button class="btn secondary" type="reset">Kosongkan</button></div></form></section>`;
+}
+function item(title,meta,actions="",badge=""){
+  return `<div class="item"><div class="item-main"><div class="item-title">${title} ${badge}</div>
+    <div class="item-meta">${meta}</div></div><div class="item-actions">${actions}</div></div>`;
+}
+function empty(msg="Belum ada rekod."){return `<div class="empty">${msg}</div>`}
+function actionBtn(action,id,label,cls="secondary"){
+  return `<button class="btn small ${cls}" data-action="${action}" data-id="${esc(id)}">${label}</button>`;
+}
+function setPage(id){
+  currentPage=id;
+  editing={type:null,id:null};
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function buildNav(){
+  const html=systems.map(s=>`<button class="nav-btn ${currentPage===s.id?"active":""}" data-page="${s.id}">
+    <span class="nav-icon">${s.icon}</span>${s.name}</button>`).join("");
+  $("#sideNav").innerHTML=`<button class="nav-btn ${currentPage==="home"?"active":""}" data-page="home"><span class="nav-icon">🏠</span>Dashboard</button>${html}`;
+  $("#mobileNav").innerHTML=[
+    {id:"home",icon:"🏠",name:"Utama"},
+    {id:"tasks",icon:"✅",name:"Tugasan"},
+    {id:"finance",icon:"💰",name:"Kewangan"},
+    {id:"stock",icon:"📦",name:"Stok"},
+    {id:"notes",icon:"📝",name:"Nota"},
+    {id:"more",icon:"☰",name:"Lain-lain"}
+  ].map(n=>`<button data-page="${n.id}" class="${currentPage===n.id?"active":""}"><span>${n.icon}</span>${n.name}</button>`).join("");
+}
+function statsCard(label,value,icon){
+  return `<div class="stat"><span class="stat-icon">${icon}</span><div class="stat-label">${label}</div><div class="stat-value">${value}</div></div>`;
+}
+function renderHome(){
+  const tasks=load("tasks"), notes=load("notes"), fin=load("finance"), stock=load("stock");
+  const income=fin.filter(x=>x.type==="income").reduce((a,x)=>a+Number(x.amount),0);
+  const expense=fin.filter(x=>x.type==="expense").reduce((a,x)=>a+Number(x.amount),0);
+  const pending=tasks.filter(x=>!x.done).length;
+  return `<div class="welcome"><h2>Selamat datang ke MiniHub 👋</h2>
+    <p>Sepuluh alat ringkas untuk membantu urusan harian, pejabat dan bisnes kecil anda.
+    Pilih mana-mana sistem untuk bermula.</p></div>
+    <div class="stats">
+    ${statsCard("Tugasan belum selesai",pending,"📌")}
+    ${statsCard("Jumlah nota",notes.length,"📝")}
+    ${statsCard("Jumlah pendapatan",money(income),"📈")}
+    ${statsCard("Baki kewangan",money(income-expense),"💳")}
+    </div>
+    <h2 class="section-heading">Semua sistem</h2>
+    <div class="grid">${systems.map(s=>`<div class="system-card" data-page="${s.id}">
+      <div class="emoji">${s.icon}</div><h3>${s.name}</h3><p>${s.desc}</p>
+      <div class="open-label">Buka sistem →</div></div>`).join("")}</div>
+    <h2 class="section-heading">Nota penggunaan</h2>
+    <div class="panel"><p class="muted" style="line-height:1.8;margin:0">
+      Data disimpan pada browser/peranti ini sahaja. Gunakan fungsi eksport untuk membuat sandaran.
+      Jika data browser dipadam atau anda menggunakan peranti lain, data mungkin tidak tersedia.</p></div>`;
+}
+
+function renderTasks(){
+  const data=load("tasks");
+  return formPanel("➕ Tambah tugasan",
+    field("Nama tugasan","taskName","text","","required maxlength='120'")+
+    field("Tarikh sasaran","taskDate","date",today())+
+    selectField("Keutamaan","taskPriority",[
+      ["normal","Biasa"],["high","Tinggi"],["low","Rendah"]
+    ]))+
+    `<section class="panel"><h2>Senarai tugasan (${data.length})</h2>
+    <div class="list">${data.length?data.map(x=>item(
+      `<span style="${x.done?"text-decoration:line-through;color:#718096":""}">${esc(x.name)}</span>`,
+      `Tarikh: ${fmtDate(x.date)} · Keutamaan: ${esc(x.priority)}`,
+      actionBtn("toggleTask",x.id,x.done?"Buka semula":"Selesai","success")+actionBtn("deleteTask",x.id,"Padam","danger"),
+      x.done?'<span class="badge green">Selesai</span>':x.priority==="high"?'<span class="badge red">Tinggi</span>':''
+    )).join(""):empty()}</div></section>`;
+}
+function renderNotes(){
+  const data=load("notes");
+  return formPanel("➕ Catat nota",
+    field("Tajuk","noteTitle","text","","required maxlength='120'")+
+    `<div class="field full"><label for="noteBody">Kandungan nota</label><textarea id="noteBody" name="noteBody" required maxlength="5000"></textarea></div>`) +
+    `<section class="panel"><h2>Nota disimpan (${data.length})</h2><div class="list">
+    ${data.length?data.map(x=>item(esc(x.title),`${esc(x.body).replace(/\n/g,"<br>")}<br><br>Dikemas kini: ${fmtDate(x.date)}`,
+      actionBtn("editNote",x.id,"Edit")+actionBtn("deleteNote",x.id,"Padam","danger")
+    )).join(""):empty()}</div></section>`;
+}
+function renderFinance(){
+  const data=load("finance");
+  const income=data.filter(x=>x.type==="income").reduce((a,x)=>a+ +x.amount,0);
+  const expense=data.filter(x=>x.type==="expense").reduce((a,x)=>a+ +x.amount,0);
+  return `<div class="stats">${statsCard("Pendapatan",money(income),"📈")}${statsCard("Perbelanjaan",money(expense),"📉")}${statsCard("Baki",money(income-expense),"💰")}${statsCard("Bilangan rekod",data.length,"🧾")}</div><br>`+
+    formPanel("➕ Rekod transaksi",
+      selectField("Jenis transaksi","finType",[["income","Pendapatan"],["expense","Perbelanjaan"]])+
+      field("Keterangan","finDesc","text","","required maxlength='120'")+
+      field("Amaun (RM)","finAmount","number","","required min='0.01' step='0.01'")+
+      field("Tarikh","finDate","date",today(),"required")+
+      field("Kategori","finCategory","text","Lain-lain","maxlength='60'"))+
+    `<section class="panel"><h2>Sejarah transaksi</h2><div class="table-wrap"><table><thead><tr><th>Tarikh</th><th>Transaksi</th><th>Jenis</th><th>Amaun</th><th></th></tr></thead><tbody>
+    ${data.length?data.slice().reverse().map(x=>`<tr><td>${fmtDate(x.date)}</td><td>${esc(x.desc)}<br><span class="muted">${esc(x.category)}</span></td><td>${x.type==="income"?"Pendapatan":"Perbelanjaan"}</td><td style="color:${x.type==="income"?"#16865b":"#d64545"}">${x.type==="income"?"+":"−"}${money(x.amount)}</td><td>${actionBtn("deleteFinance",x.id,"Padam","danger")}</td></tr>`).join(""):'<tr><td colspan="5">Belum ada transaksi.</td></tr>'}
+    </tbody></table></div></section>`;
+}
+function renderStock(){
+  const data=load("stock");
+  const low=data.filter(x=>Number(x.qty)<=Number(x.min)).length;
+  return `<div class="stats">${statsCard("Jenis barang",data.length,"📦")}${statsCard("Stok rendah",low,"⚠️")}</div><br>`+
+    formPanel("➕ Daftar barang",
+      field("Nama barang","stockName","text","","required maxlength='120'")+
+      field("Kuantiti","stockQty","number","","required min='0' step='1'")+
+      field("Paras minimum","stockMin","number","5","required min='0' step='1'")+
+      field("Harga seunit (RM)","stockPrice","number","0","min='0' step='0.01'"))+
+    `<section class="panel"><h2>Senarai inventori</h2><div class="list">${data.length?data.map(x=>item(
+      esc(x.name),`Kuantiti: <strong>${x.qty}</strong> · Harga seunit: ${money(x.price)} · Nilai stok: ${money(x.qty*x.price)}`,
+      actionBtn("stockMinus",x.id,"− 1")+actionBtn("stockPlus",x.id,"+ 1","success")+actionBtn("deleteStock",x.id,"Padam","danger"),
+      Number(x.qty)<=Number(x.min)?'<span class="badge red">Stok rendah</span>':'<span class="badge green">Mencukupi</span>'
+    )).join(""):empty()}</div></section>`;
+}
+function renderAttendance(){
+  const data=load("attendance").filter(x=>x.date===($("#attFilter")?.value||today()));
+  const date=$("#attFilter")?.value||today();
+  return `<section class="panel"><h2>📅 Rekod kehadiran</h2>
+    <div class="form-grid">${field("Tarikh rekod","attFilter","date",date)}</div></section>`+
+    formPanel("➕ Daftar kehadiran",
+      field("Nama penuh","attName","text","","required maxlength='120'")+
+      selectField("Status","attStatus",[["Hadir","Hadir"],["Lewat","Lewat"],["Tidak hadir","Tidak hadir"]])+
+      field("Catatan (pilihan)","attNote","text","","maxlength='200'"))+
+    `<section class="panel"><h2>Kehadiran pada ${fmtDate(date)}</h2>
+    <div class="stats">${statsCard("Jumlah",data.length,"👥")}${statsCard("Hadir",data.filter(x=>x.status==="Hadir").length,"✅")}${statsCard("Lewat",data.filter(x=>x.status==="Lewat").length,"🕒")}${statsCard("Tidak hadir",data.filter(x=>x.status==="Tidak hadir").length,"❌")}</div><br>
+    <div class="list">${data.length?data.map(x=>item(esc(x.name),`${esc(x.note||"Tiada catatan")} · ${fmtDate(x.date)}`,
+      actionBtn("deleteAttendance",x.id,"Padam","danger"),
+      `<span class="badge ${x.status==="Hadir"?"green":x.status==="Lewat"?"orange":"red"}">${esc(x.status)}</span>`
+    )).join(""):empty("Tiada rekod pada tarikh ini.")}</div></section>`;
+}
+function renderBMI(){
+  return `<section class="panel"><h2>⚖️ Kalkulator BMI</h2><p class="muted">Masukkan berat dan tinggi untuk mendapatkan pengiraan BMI.</p>
+    <form id="bmiForm"><div class="form-grid">
+    ${field("Berat (kg)","bmiWeight","number","","required min='1' max='500' step='0.1'")}
+    ${field("Tinggi (cm)","bmiHeight","number","","required min='50' max='250' step='0.1'")}
+    </div><div class="actions"><button class="btn" type="submit">Kira BMI</button></div></form>
+    <div id="bmiResult"></div></section>
+    <div class="notice">Kategori BMI dewasa di bawah hanyalah saringan umum untuk individu berumur 18 tahun ke atas. Bagi kanak-kanak dan remaja, gunakan carta BMI mengikut umur dan jantina. BMI bukan diagnosis kesihatan.</div>`;
+}
+function renderConverter(){
+  return `<section class="panel"><h2>🔄 Penukar Unit</h2>
+  <div class="form-grid">
+  ${selectField("Kategori","convType",[["length","Panjang"],["weight","Berat"],["temperature","Suhu"],["volume","Isipadu"]])}
+  ${field("Nilai","convValue","number","1","step='any'")}
+  ${selectField("Daripada","convFrom",[])}
+  ${selectField("Kepada","convTo",[])}
+  </div><div class="actions"><button class="btn" id="convertBtn">Tukar unit</button></div><div id="convResult"></div></section>`;
+}
+const units={
+ length:[
+  ["mm","Milimeter",0.001],["cm","Sentimeter",0.01],["m","Meter",1],
+  ["km","Kilometer",1000],["in","Inci",0.0254],["ft","Kaki",0.3048]
+ ],
+ weight:[
+  ["mg","Miligram",0.000001],["g","Gram",0.001],["kg","Kilogram",1],
+  ["lb","Paun",0.45359237],["oz","Auns",0.0283495]
+ ],
+ volume:[
+  ["ml","Mililiter",0.001],["l","Liter",1],["m3","Meter padu",1000],
+  ["cup","Cawan (AS)",0.236588],["gal","Gelen AS",3.78541]
+ ],
+ temperature:[["C","Celsius"],["F","Fahrenheit"],["K","Kelvin"]]
+};
+function renderContacts(){
+ const data=load("contacts");
+ return formPanel("➕ Tambah kenalan",
+   field("Nama","contactName","text","","required maxlength='120'")+
+   field("Telefon","contactPhone","tel","","required maxlength='30'")+
+   field("E-mel","contactEmail","email","","maxlength='150'")+
+   field("Organisasi","contactOrg","text","","maxlength='120'"))+
+   `<section class="panel"><h2>Direktori kenalan</h2><input class="search" id="contactSearch" placeholder="Cari nama, telefon atau e-mel...">
+   <div id="contactList" class="list">${data.length?data.map(x=>contactItem(x)).join(""):empty()}</div></section>`;
+}
+function contactItem(x){
+ return item(esc(x.name),`Telefon: ${esc(x.phone)}<br>E-mel: ${esc(x.email||"-")}<br>Organisasi: ${esc(x.org||"-")}`,
+   actionBtn("deleteContact",x.id,"Padam","danger"));
+}
+function renderHabits(){
+ const data=load("habits"), date=today();
+ return formPanel("➕ Tambah tabiat",field("Nama tabiat","habitName","text","","required maxlength='120'"))+
+ `<section class="panel"><h2>Tabiat hari ini · ${fmtDate(date)}</h2>
+ <div class="list">${data.length?data.map(x=>{
+  const done=(x.completed||[]).includes(date);
+  return item(esc(x.name),done?"Bagus! Tabiat ini selesai hari ini.":"Tandakan selepas selesai melakukan tabiat.",
+   actionBtn("toggleHabit",x.id,done?"Batal tanda":"Selesai hari ini",done?"secondary":"success")+
+   actionBtn("deleteHabit",x.id,"Padam","danger"),
+   done?'<span class="badge green">Selesai</span>':'<span class="badge">Belum</span>');
+ }).join(""):empty()}</div></section>`;
+}
+function renderEvents(){
+ const data=load("events");
+ return formPanel("➕ Tambah acara",
+   field("Nama acara","eventName","text","","required maxlength='120'")+
+   field("Tarikh acara","eventDate","date","","required")+
+   `<div class="field full"><label for="eventDesc">Catatan</label><textarea name="eventDesc" id="eventDesc" maxlength="1000"></textarea></div>`) +
+   `<section class="panel"><h2>Acara akan datang</h2><div class="list">${data.length?data.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>{
+    const diff=Math.ceil((new Date(x.date+"T00:00:00")-new Date(today()+"T00:00:00"))/86400000);
+    const label=diff<0?`Sudah berlalu ${Math.abs(diff)} hari`:diff===0?"Hari ini!":`${diff} hari lagi`;
+    return item(esc(x.name),`${fmtDate(x.date)}<br>${esc(x.desc||"Tiada catatan")}`,
+      actionBtn("deleteEvent",x.id,"Padam","danger"),
+      `<span class="badge ${diff<0?"":diff===0?"green":"orange"}">${label}</span>`);
+   }).join(""):empty()}</div></section>`;
+}
+function renderAbout(){
+ return `<div class="welcome"><h2>Tentang MiniHub</h2><p>Satu fail HTML yang menggabungkan 10 sistem kecil untuk penggunaan harian.</p></div>
+ <section class="panel"><h2>Teknologi</h2><p>HTML5, CSS3 dan JavaScript vanilla. Tiada framework diperlukan.</p>
+ <h3>Penyimpanan data</h3><p>Rekod disimpan dalam localStorage browser yang digunakan.</p>
+ <h3>Perkara penting</h3><div class="notice">Versi ini tidak menggunakan pangkalan data awan. Data tidak dikongsi antara peranti atau browser secara automatik. Buat sandaran secara berkala.</div>
+ <div class="actions"><button class="btn" id="exportBtn">Eksport semua data (JSON)</button><button class="btn secondary" id="importBtn">Import sandaran JSON</button><button class="btn danger" id="clearBtn">Padam semua data</button><input type="file" id="importFile" accept=".json,application/json" hidden></div></section>`;
+}
+function render(){
+ buildNav();
+ const s=systems.find(x=>x.id===currentPage);
+ $("#pageTitle").textContent=currentPage==="home"?"Dashboard":currentPage==="about"?"Tentang aplikasi":s?.name||"Dashboard";
+ $("#pageSubtitle").textContent=currentPage==="home"?"Pusat kawalan sistem mini anda":descriptions[currentPage]||"MiniHub";
+ const views={
+  home:renderHome,tasks:renderTasks,notes:renderNotes,finance:renderFinance,
+  stock:renderStock,attendance:renderAttendance,bmi:renderBMI,
+  converter:renderConverter,contacts:renderContacts,habits:renderHabits,
+  events:renderEvents,about:renderAbout
+ };
+ content.innerHTML=(views[currentPage]||renderHome)();
+ if(currentPage==="converter") updateUnitOptions();
+}
+
+/* Pengurusan navigasi */
+document.addEventListener("click",e=>{
+ const page=e.target.closest("[data-page]");
+ if(page){
+  const id=page.dataset.page;
+  if(id==="more"){setPage("about");return}
+  setPage(id);return;
+ }
+ const btn=e.target.closest("[data-action]");
+ if(btn) handleAction(btn.dataset.action,btn.dataset.id);
+});
+$("#homeBtn").addEventListener("click",()=>setPage("home"));
+
+/* Simpan borang mengikut sistem */
+document.addEventListener("submit",e=>{
+ if(e.target.id==="bmiForm"){
+  e.preventDefault();
+  const w=Number($("#bmiWeight").value),h=Number($("#bmiHeight").value)/100;
+  if(!(w>0&&h>0)){alert("Sila masukkan berat dan tinggi yang sah.");return}
+  const bmi=w/(h*h);
+  let cat=bmi<18.5?"Kurang berat":bmi<25?"Julat normal":bmi<30?"Berlebihan berat":"Obesiti";
+  $("#bmiResult").innerHTML=`<div class="result"><div class="muted">BMI anda</div><strong>${bmi.toFixed(1)}</strong><p>${cat}</p></div>`;
+  return;
+ }
+ if(e.target.id!=="recordForm")return;
+ e.preventDefault();
+ const f=new FormData(e.target),v=Object.fromEntries(f.entries());
+ const add=(key,obj)=>{const d=load(key);d.push({id:uid(),...obj});save(key,d)};
+ switch(currentPage){
+  case "tasks":
+   if(!v.taskName.trim())return;
+   add("tasks",{name:v.taskName.trim(),date:v.taskDate,priority:v.taskPriority,done:false});break;
+  case "notes":
+   if(editing.type==="note"){
+    const d=load("notes"),n=d.find(x=>x.id===editing.id);
+    if(n){n.title=v.noteTitle.trim();n.body=v.noteBody;n.date=today();save("notes",d)}
+    editing={type:null,id:null};
+   }else add("notes",{title:v.noteTitle.trim(),body:v.noteBody,date:today()});
+   break;
+  case "finance":
+   if(!(Number(v.finAmount)>0))return alert("Amaun mestilah lebih daripada sifar.");
+   add("finance",{type:v.finType,desc:v.finDesc.trim(),amount:Number(v.finAmount),date:v.finDate,category:v.finCategory});break;
+  case "stock":
+   add("stock",{name:v.stockName.trim(),qty:Number(v.stockQty),min:Number(v.stockMin),price:Number(v.stockPrice)||0});break;
+  case "attendance":
+   add("attendance",{name:v.attName.trim(),status:v.attStatus,note:v.attNote.trim(),date:today()});break;
+  case "contacts":
+   add("contacts",{name:v.contactName.trim(),phone:v.contactPhone.trim(),email:v.contactEmail.trim(),org:v.contactOrg.trim()});break;
+  case "habits":
+   add("habits",{name:v.habitName.trim(),completed:[]});break;
+  case "events":
+   add("events",{name:v.eventName.trim(),date:v.eventDate,desc:v.eventDesc.trim()});break;
+ }
+ render();
+});
+
+/* Aksi rekod */
+function handleAction(action,id){
+ let key="",d=[];
+ const mapping={
+  toggleTask:"tasks",deleteTask:"tasks",deleteNote:"notes",editNote:"notes",
+  deleteFinance:"finance",stockPlus:"stock",stockMinus:"stock",deleteStock:"stock",
+  deleteAttendance:"attendance",deleteContact:"contacts",toggleHabit:"habits",deleteHabit:"habits",deleteEvent:"events"
+ };
+ key=mapping[action];if(!key)return;
+ d=load(key);
+ const i=d.findIndex(x=>x.id===id);if(i<0)return;
+ switch(action){
+  case "toggleTask":d[i].done=!d[i].done;break;
+  case "deleteTask":case "deleteNote":case "deleteFinance":case "deleteStock":
+  case "deleteAttendance":case "deleteContact":case "deleteHabit":case "deleteEvent":
+   if(!confirm("Padam rekod ini?"))return;
+   d.splice(i,1);break;
+  case "stockPlus":d[i].qty=Number(d[i].qty)+1;break;
+  case "stockMinus":
+   if(Number(d[i].qty)>0)d[i].qty=Number(d[i].qty)-1;break;
+  case "toggleHabit":{
+   const date=today();d[i].completed=d[i].completed||[];
+   d[i].completed=d[i].completed.includes(date)?d[i].completed.filter(x=>x!==date):[...d[i].completed,date];break;
+  }
+  case "editNote":{
+   const x=d[i];editing={type:"note",id};
+   render();
+   $("#noteTitle").value=x.title;$("#noteBody").value=x.body;
+   const submit=$("#recordForm button[type=submit]");if(submit)submit.textContent="Kemaskini nota";
+   $("#noteTitle").focus();return;
+  }
+ }
+ save(key,d);render();
+}
+
+/* Penapis tarikh kehadiran */
+document.addEventListener("change",e=>{
+ if(e.target.id==="attFilter")render();
+ if(e.target.id==="convType")updateUnitOptions();
+});
+/* Direktori kenalan: carian */
+document.addEventListener("input",e=>{
+ if(e.target.id==="contactSearch"){
+  const q=e.target.value.toLowerCase();
+  const data=load("contacts").filter(x=>(x.name+" "+x.phone+" "+x.email+" "+x.org).toLowerCase().includes(q));
+  $("#contactList").innerHTML=data.length?data.map(contactItem).join(""):empty("Tiada kenalan sepadan.");
+ }
+});
+
+/* Penukar unit */
+function updateUnitOptions(){
+ const type=$("#convType")?.value||"length",list=units[type];
+ ["convFrom","convTo"].forEach(id=>{
+  const el=$("#"+id);if(!el)return;
+  const previous=el.value;
+  el.innerHTML=list.map(u=>`<option value="${u[0]}">${u[1]} (${u[0]})</option>`).join("");
+  if(list.some(u=>u[0]===previous))el.value=previous;
+ });
+ if($("#convTo")&&list.length>1)$("#convTo").selectedIndex=1;
+}
+$("#appContent").addEventListener("click",e=>{
+ if(e.target.id==="convertBtn"){
+  const type=$("#convType").value,val=Number($("#convValue").value);
+  const from=$("#convFrom").value,to=$("#convTo").value;
+  if($("#convValue").value.trim()===""||!Number.isFinite(val)){
+   $("#convResult").innerHTML='<div class="notice">Masukkan nilai yang sah.</div>';return;
+  }
+  let result;
+  if(type==="temperature"){
+   let c=from==="C"?val:from==="F"?(val-32)*5/9:val-273.15;
+   result=to==="C"?c:to==="F"?c*9/5+32:c+273.15;
+  }else{
+   const a=units[type].find(u=>u[0]===from),b=units[type].find(u=>u[0]===to);
+   result=val*a[2]/b[2];
+  }
+  $("#convResult").innerHTML=`<div class="result"><div class="muted">Hasil penukaran</div><strong>${Number(result.toPrecision(10)).toLocaleString("ms-MY",{maximumFractionDigits:8})}</strong><p>${esc(to)}</p></div>`;
+ }
+ if(e.target.id==="exportBtn")exportData();
+ if(e.target.id==="importBtn")$("#importFile").click();
+ if(e.target.id==="clearBtn")clearAll();
+});
+
+/* Eksport dan import sandaran */
+function exportData(){
+ const data={version:1,exportedAt:new Date().toISOString(),data:{}};
+ systems.forEach(s=>data.data[s.id]=load(s.id));
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="minihub-backup-"+today()+".json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$("#appContent").addEventListener("change",async e=>{
+ if(e.target.id!=="importFile"||!e.target.files[0])return;
+ try{
+  const parsed=JSON.parse(await e.target.files[0].text());
+  if(!parsed.data||!confirm("Import akan menggantikan rekod semasa bagi 10 sistem. Teruskan?"))return;
+  systems.forEach(s=>save(s.id,Array.isArray(parsed.data[s.id])?parsed.data[s.id]:[]));
+  alert("Sandaran berjaya diimport.");render();
+ }catch(err){alert("Fail tidak sah atau tidak dapat dibaca.")}
+ e.target.value="";
+});
+function clearAll(){
+ if(!confirm("AMARAN: Semua data bagi 10 sistem akan dipadam. Adakah anda sudah membuat sandaran?"))return;
+ if(!confirm("Pengesahan terakhir: Padam semua rekod MiniHub?"))return;
+ systems.forEach(s=>localStorage.removeItem("minihub_"+s.id));
+ render();
+}
+
+/* Jam dan tarikh */
+function updateClock(){
+ const now=new Date();
+ $("#clock").innerHTML=now.toLocaleDateString("ms-MY",{weekday:"short",day:"numeric",month:"short",year:"numeric"})+
+ "<br>"+now.toLocaleTimeString("ms-MY",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+$("#year").textContent=new Date().getFullYear();
+updateClock();setInterval(updateClock,1000);
+render();
+</script>
+</body>
+</html>
